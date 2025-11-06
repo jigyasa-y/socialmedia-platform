@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts</title>
+</head>
+<link rel="stylesheet" href="../css/dashboard.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Playwrite+AU+QLD:wght@100..400&display=swap');
+</style>
+<body>
+<section class="comment_section hidden">
+        
+<div class="userComments">
+
+</div>
+
+<div class="addComment">
+    <input type="text" placeholder="Type a comment...." id="myComment">
+    <button id="doneComment">Done</button>
+</div>
+       </section>
+    
+    <div class="wrapper">
+<nav>
+    <div class="userDetails">
+    <img src="../../public/avatar.jpeg" alt="" id="currentUser_profile">
+    <span id="current_user"></span>
+</div>
+
+<img src="../../public/logo4.png" id="appLogo" alt="">
+<div class="sub_nav">
+
+<div class="info">
+<div class="info_list">
+<a href=""><i class="fa-solid fa-house"></i></a>
+<a id="friends"><i class="fa-solid fa-user-group"></i></a>
+<a id="friendsAppend"><i class="fa-solid fa-address-card"></i></a>
+<a href="#"><i class="fa-solid fa-wrench"></i></a>
+</div>
+</div>
+</div>
+<div class="searchSection"> 
+    <input type="search"  placeholder="Search..." id="search">
+
+    <div class="results ">
+
+
+    </div>
+</div>
+</nav>
+<div class="mainContent_wrapper">
+
+    <div class="leftSection"></div>
+<div class="posts">
+
+</div>
+<div class="rightSection">
+
+<section class="createPostSection">
+   <input type="file" id="postFile">
+   <button id="createPost">+</button>
+   <div class="previewDiv hidden">
+    <img src="" alt="" id="uploadSelectedImg">
+    <button id="uploadButton">Upload</button>
+
+   </div>
+
+</section>
+</div>
+    </div>
+
+    <section class="friends hidden">
+       
+    </section>
+
+     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../javascript/dashBoard.js"></script>
+</body>
+</html>

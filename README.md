@@ -1,1 +1,1 @@
-# socialmedia-platform
+# JoySync
