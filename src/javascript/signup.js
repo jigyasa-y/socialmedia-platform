@@ -9,7 +9,7 @@ const password=document.querySelector("#password").value;
 
 try{
  
-const response=await axios.post("http://localhost:3000/api/auth/signup",
+const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/auth/signup",
   {
     fullName,
     email,
@@ -63,7 +63,7 @@ catch(error){
 //       const email = document.getElementById("email").value;
 //       const password = document.getElementById("password").value;
 //     try {
-//   const response = await axios.post("http://localhost:3000/api/auth/signup", {
+//   const response = await axios.post("https://socialmedia-platform-server.onrender.com/api/auth/signup", {
 //     fullName,
 //     email,
 //     password,
@@ -76,4 +76,5 @@ catch(error){
 
 // }
 // });
+
 
