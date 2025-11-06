@@ -14,14 +14,14 @@ if(!token){
   return ;
 }
 
- const response = await fetch("http://localhost:3000/api/auth/checkAuth",{
+ const response = await fetch("https://socialmedia-platform-server.onrender.com/api/auth/checkAuth",{
   method: "POST",
   headers: {
     Authorization: ` Bearer ${token}`, 
   }
 });
 const data=await response.json();
-// const res=await axios.post("http://localhost:3000/api/auth/checkAuth",{token});
+// const res=await axios.post("https://socialmedia-platform-server.onrender.com/api/auth/checkAuth",{token});
 
 
   currentPic.src=data.profilePic?data.profilePic:"../../public/avatar.jpeg";
@@ -52,7 +52,7 @@ edit_menu.classList.add('hidden');
   const token = localStorage.getItem("token");
 
    try {
- const response = await fetch("http://localhost:3000/api/auth/profile-update",{
+ const response = await fetch("/api/auth/profile-https://socialmedia-platform-server.onrender.com",{
   method: "POST",
   headers: {
     Authorization: ` Bearer ${token}`, 
@@ -70,6 +70,7 @@ edit_menu.classList.add('hidden');
         console.error(error);
         alert("Error uploading image.");
       } 
+
 
 
 
