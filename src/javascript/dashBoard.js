@@ -35,7 +35,7 @@ if(!token){
     return ;
 }
 try{
- const response = await fetch("http://localhost:3000/api/auth/checkAuth",{
+ const response = await fetch("https://socialmedia-platform-server.onrender.com/api/auth/checkAuth",{
   method: "POST",
   headers: {
     Authorization: ` Bearer ${token}`, 
@@ -56,7 +56,7 @@ const loadPosts=async()=>{
  
 try{
 
-  const response=await axios.get(`http://localhost:3000/api/auth/getPosts/${userId}`)
+  const response=await axios.get(`https://socialmedia-platform-server.onrender.com/api/auth/getPosts/${userId}`)
 posts.innerHTML=""
 
 const users=(response.data).reverse();
@@ -98,7 +98,7 @@ console.log(error.message);
 const loadComments=async (postId)=>{
 try{
 
-const response=await axios.post("http://localhost:3000/api/auth/loadComments",{postId});
+const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/auth/loadComments",{postId});
 // console.log(response.fullName);
 userComments.innerHTML="";
 response.data.forEach(async data=>{
@@ -143,7 +143,7 @@ addComment.addEventListener("click",async ()=>{
     if(!text){
       return;
     }
-    const response=await axios.post("http://localhost:3000/api/auth/writeComment",{userId,postId,text});
+    const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/auth/writeComment",{userId,postId,text});
     myComment.value=""; 
     loadComments(postId);
 })
@@ -184,7 +184,7 @@ uploadButton.addEventListener("click",async()=>{
   const token = localStorage.getItem("token");
 console.log(formData)
    try {
- const response = await fetch("http://localhost:3000/api/auth/upload-post",{
+ const response = await fetch("https://socialmedia-platform-server.onrender.com/api/auth/upload-post",{
   method: "POST",
   headers: {
     Authorization: `Bearer ${token}`, 
@@ -216,7 +216,7 @@ friendsPage.addEventListener("click",async()=>{
 
 try{
 
-  const response=await axios.post(`http://localhost:3000/api/friends/requests/${userId}`);
+  const response=await axios.post(`https://socialmedia-platform-server.onrender.com/api/friends/requests/${userId}`);
 friendSection.innerHTML="";
 
 friendSection.classList.toggle("hidden");
@@ -261,7 +261,7 @@ searchBar.addEventListener("input",async ()=>{
     list.style.display="none";
     return ;
     }
-    const response=await axios.post("http://localhost:3000/api/friends/search",{name});
+    const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/friends/search",{name});
     const users=response.data;
     if(users.length===0){
     list.style.display="none";
@@ -291,7 +291,7 @@ const sendFriendRequest= async(receiverId)=> {
 const senderId=userId;
 
 try{
-    const response=await axios.post("http://localhost:3000/api/friends/sendRequest",
+    const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/friends/sendRequest",
         {
             senderId,
             receiverId
@@ -308,7 +308,7 @@ console.log(error?.response.data.message);
 const acceptRequest=async(requestId)=>{
 
 try{
-  const response=await fetch(`http://localhost:3000/api/friends/accept`,{
+  const response=await fetch(`https://socialmedia-platform-server.onrender.com/api/friends/accept`,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({requestId})
@@ -328,7 +328,7 @@ catch(error){
 
 const rejectRequest=async(requestId)=>{
 try{
-const response=await fetch(`http://localhost:3000/api/friends/reject`,
+const response=await fetch(`https://socialmedia-platform-server.onrender.com/api/friends/reject`,
 {
     method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -349,7 +349,7 @@ catch(error){
 const appendFriends=async()=>{
 friendSection.classList.toggle("hidden");
   try{
-const response=await fetch(`http://localhost:3000/api/friends/list/${userId}`,{
+const response=await fetch(`https://socialmedia-platform-server.onrender.com/api/friends/list/${userId}`,{
   method:"POST"}
 );
 const friends=await response.json();
@@ -402,7 +402,7 @@ const likePost=async (postId)=>{
   const likeBtn=document.getElementById(`likeBtn-${postId}`);
 let liked=false;
   try{
-const response=await axios.post("http://localhost:3000/api/auth/likePost",{
+const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/auth/likePost",{
   postId,
   userId
 });
@@ -422,7 +422,7 @@ const response=await axios.post("http://localhost:3000/api/auth/likePost",{
 const deleteFriends=async (friendsId)=>{
 
   try{
-    const response=await axios.post("http://localhost:3000/api/friends/deleteFriend",{userId,friendsId});
+    const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/friends/deleteFriend",{userId,friendsId});
     console.log(response);
     appendFriends();
   }
@@ -432,7 +432,7 @@ catch(error){
 }
 const findUser=async(userId)=>{
   try{
-const response=await axios.post("http://localhost:3000/api/auth/findUser",{userId});
+const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/auth/findUser",{userId});
 return response.data;
 
 }
@@ -440,3 +440,4 @@ catch(error){
   console.log("Error in find user :",error.message);
 }
 }
+
