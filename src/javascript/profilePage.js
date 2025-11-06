@@ -52,7 +52,7 @@ edit_menu.classList.add('hidden');
   const token = localStorage.getItem("token");
 
    try {
- const response = await fetch("/api/auth/profile-https://socialmedia-platform-server.onrender.com",{
+ const response = await fetch("https://socialmedia-platform-server.onrender.com/api/auth/profile-update",{
   method: "POST",
   headers: {
     Authorization: ` Bearer ${token}`, 
@@ -75,3 +75,4 @@ edit_menu.classList.add('hidden');
 
 
   });
+
