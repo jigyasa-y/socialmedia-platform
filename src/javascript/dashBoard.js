@@ -18,6 +18,7 @@ const commentSection=document.querySelector(".comment_section");
 const currentUser_Pic=document.querySelector("#currentUser_profile");
 const uploadSelectedImg=document.querySelector("#uploadSelectedImg");
  const myComment=document.querySelector("#myComment");
+
 let token=null;
 let userId=null;
 let idPost=null;
@@ -75,7 +76,10 @@ posts.innerHTML+=
           </div>
           <p id="userCaption"> Lorem , deleniti est. Non illum repellat beatae, provident dolore minima </p>
         </div>
-        <img src="${post.img}" alt="" id="postImage">
+        <div class="post_picture_loader">
+<span id="spinner"></span>
+</div>
+        <img src="${post.img}" alt="" id="postImage" class="postLoader hidden">
         <div class="counts">
 <span id="likes">${post.likes.length} likes</span>
 <span id="comments">${post.comments.length} comments</span>
@@ -94,6 +98,8 @@ catch(error){
 console.log(error.message);
 }
 }
+
+
 
 const loadComments=async (postId)=>{
 try{
@@ -253,13 +259,19 @@ console.log(error.message)
 
 });
 
+
 searchBar.addEventListener("input",async ()=>{
     
     const name=document.querySelector("#search").value;
-    list.innerHTML="";
-    if(!name){
+    
+    if(name==""){
+   
+      list.innerHTML=""
     list.style.display="none";
     return ;
+    }
+    else {
+          list.style.display="inline";
     }
     const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/friends/search",{name});
     const users=response.data;
@@ -284,7 +296,7 @@ SearchedUserInfo.classList.add("SearchedUserInfo");
 list.appendChild(SearchedUserInfo);
 
 });
-list.style.display="block";
+// list.style.display="block";
 });
 
 const sendFriendRequest= async(receiverId)=> {
@@ -407,10 +419,6 @@ const response=await axios.post("https://socialmedia-platform-server.onrender.co
   userId
 });
 
-// updateLike(response.data.success);
-
-
-    
 
   }catch(error){
 
