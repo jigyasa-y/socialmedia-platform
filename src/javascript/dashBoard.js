@@ -7,12 +7,14 @@ const friendsPage=document.querySelector("#friends");
 const friendSection=document.querySelector(".friends");
 const createPost=document.querySelector("#createPost");
 const previewDiv=document.querySelector(".previewDiv");
+const preview_wrapper=document.querySelector(".preview_wrapper");
 const addComment=document.querySelector("#doneComment");
 const userDetails=document.querySelector(".userDetails");
 const userComments=document.querySelector(".userComments");
 const commentButtons=document.querySelectorAll("#comment");
 const uploadButton=document.querySelector("#uploadButton");
 const friendsAppend=document.querySelector("#friendsAppend");
+const cancelPOst=document.querySelector("#cancelPost");
 const currentUser_name=document.querySelector("#current_user");
 const commentSection=document.querySelector(".comment_section");
 const currentUser_Pic=document.querySelector("#currentUser_profile");
@@ -165,16 +167,19 @@ window.onclick=async()=>{
 }
 createPost.addEventListener("click",()=>{
     postFile.click();
-    previewDiv.classList.add("hidden");
+    preview_wrapper.classList.add("hidden");
 
 })
 
+cancelPOst.addEventListener("click",()=>{
+  preview_wrapper.classList.add("hidden");
+})
 postFile.addEventListener("change",(e)=>{
 const file=e.target.files[0];
 if(file){
 uploadSelectedImg.src=URL.createObjectURL(file);
 }
-previewDiv.classList.remove("hidden");
+preview_wrapper.classList.remove("hidden");
 
 })
 
@@ -448,4 +453,10 @@ catch(error){
   console.log("Error in find user :",error.message);
 }
 }
+
+cancelPOst.addEventListener("click",()=>{
+
+})
+
+
 
