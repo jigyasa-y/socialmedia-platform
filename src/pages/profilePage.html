@@ -264,6 +264,97 @@ body {
     background-color: #4a4a4a;
 }
 
+.postsSection {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid var(--border-color);
+}
+
+.postsHeader {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: var(--light-text);
+    text-align: center;
+}
+
+.postsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.postItem {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    border: 2px solid var(--border-color);
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.postItem:hover {
+    transform: scale(1.05);
+    border-color: var(--primary-color);
+}
+
+.postItem img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.deletePostBtn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: rgba(244, 67, 54, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-size: 14px;
+}
+
+.postItem:hover .deletePostBtn {
+    opacity: 1;
+}
+
+.deletePostBtn:hover {
+    background-color: rgba(211, 47, 47, 1);
+}
+
+.emptyPosts {
+    text-align: center;
+    color: var(--dark-text);
+    padding: 40px 20px;
+    font-size: 1.1rem;
+}
+
+.postsContainer::-webkit-scrollbar {
+    width: 6px;
+}
+
+.postsContainer::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.postsContainer::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+
 </style>
 <body>
 
@@ -316,11 +407,11 @@ body {
 </div>
 <button id="follow_button" >Follow</button>
 
-
-
-
-
-
+<div class="postsSection">
+    <h2 class="postsHeader">My Posts</h2>
+    <div class="postsContainer" id="postsContainer">
+    </div>
+</div>
 
 </div>
      <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

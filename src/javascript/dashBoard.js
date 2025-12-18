@@ -4,7 +4,9 @@ const wrapper=document.querySelector(".wrapper");
 const searchBar=document.querySelector("#search");
 const postFile=document.querySelector("#postFile");
 const friendsPage=document.querySelector("#friends");
-const friendSection=document.querySelector(".friends");
+const friendsContainer=document.querySelector(".friends");
+const friendSection=document.querySelector(".friendsList");
+const friendSectionTitle=document.querySelector("#friendsSectionTitle");
 const createPost=document.querySelector("#createPost");
 const previewDiv=document.querySelector(".previewDiv");
 const preview_wrapper=document.querySelector(".preview_wrapper");
@@ -19,11 +21,16 @@ const currentUser_name=document.querySelector("#current_user");
 const commentSection=document.querySelector(".comment_section");
 const currentUser_Pic=document.querySelector("#currentUser_profile");
 const uploadSelectedImg=document.querySelector("#uploadSelectedImg");
- const myComment=document.querySelector("#myComment");
+const myComment=document.querySelector("#myComment");
+const loading=document.querySelector(".loading_wrapper");
+const loading_message=document.querySelector("#loading_message");
+
 
 let token=null;
 let userId=null;
 let idPost=null;
+const url="http://localhost:3000"
+// const url="https://socialmedia-platform-server.onrender.com";
 
 
 window.onload=async ()=>{
@@ -38,7 +45,7 @@ if(!token){
     return ;
 }
 try{
- const response = await fetch("https://socialmedia-platform-server.onrender.com/api/auth/checkAuth",{
+ const response = await fetch(`${url}/api/auth/checkAuth`,{
   method: "POST",
   headers: {
     Authorization: ` Bearer ${token}`, 
@@ -56,16 +63,17 @@ userId=data._id;
 
 }
 const loadPosts=async()=>{
- 
-try{
-
-  const response=await axios.get(`https://socialmedia-platform-server.onrender.com/api/auth/getPosts/${userId}`)
+  try{
+    
+    loading.classList.remove("hidden");
+  const response=await axios.get(`${url}/api/auth/getPosts/${userId}`)
 posts.innerHTML=""
-
 const users=(response.data).reverse();
+    loading.classList.add("hidden");
 
 users.forEach(post=>{
 likedByUser=post.likes.includes(userId);
+const captionText = post.caption || "";
 posts.innerHTML+=
 `
     <div class="post">
@@ -73,17 +81,17 @@ posts.innerHTML+=
         <div class="author_section">
             
         <div class="authorDetails">
-              <img src="${post.profilePic}" alt="" id="userProfile">
-              <span id="userName">${post.fullName}</span>
+              <img src="${post.author.profilePic}" alt="" id="userProfile">
+              <span id="userName">${post.author.fullName}</span>
           </div>
-          <p id="userCaption"> Lorem , deleniti est. Non illum repellat beatae, provident dolore minima </p>
+          ${captionText ? `<p id="userCaption">${captionText}</p>` : ''}
         </div>
         <div class="post_picture_loader">
 <span id="spinner"></span>
 </div>
         <img src="${post.img}" alt="" id="postImage" class="postLoader hidden">
         <div class="counts">
-<span id="likes">${post.likes.length} likes</span>
+<span id="likeCount-${post._id}" class="likes">${post.likes.length} likes</span>
 <span id="comments">${post.comments.length} comments</span>
         </div>
         <div class="intraction">
@@ -93,20 +101,23 @@ posts.innerHTML+=
     </div> `
 
 
-})
+});
+
+
+
+// document.querySelector(".like").addEventListener("click",()=>{
+//   console.log("Likedl")
+// })
 }
 catch(error){
-
+    loading.classList.add("hidden");
 console.log(error.message);
 }
 }
-
-
-
 const loadComments=async (postId)=>{
 try{
 
-const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/auth/loadComments",{postId});
+const response=await axios.post(`${url}/api/auth/loadComments`,{postId});
 // console.log(response.fullName);
 userComments.innerHTML="";
 response.data.forEach(async data=>{
@@ -151,20 +162,13 @@ addComment.addEventListener("click",async ()=>{
     if(!text){
       return;
     }
-    const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/auth/writeComment",{userId,postId,text});
+    const response=await axios.post(`${url}/api/auth/writeComment`,{userId,postId,text});
     myComment.value=""; 
     loadComments(postId);
 })
 
 }
-window.onclick=async()=>{
-  setTimeout(() => {
-    loadPosts();
-    
-  }, 500);
 
-
-}
 createPost.addEventListener("click",()=>{
     postFile.click();
     preview_wrapper.classList.add("hidden");
@@ -173,6 +177,8 @@ createPost.addEventListener("click",()=>{
 
 cancelPOst.addEventListener("click",()=>{
   preview_wrapper.classList.add("hidden");
+  const captionInput = document.querySelector("#post_caption");
+  if (captionInput) captionInput.value = "";
 })
 postFile.addEventListener("change",(e)=>{
 const file=e.target.files[0];
@@ -184,18 +190,25 @@ preview_wrapper.classList.remove("hidden");
 })
 
 uploadButton.addEventListener("click",async()=>{
+loading.classList.remove("hidden");
+
   const selectedFile = postFile.files[0];
   if (!selectedFile) {
     alert("Please select a file");
     return;
   }
-  previewDiv.classList.add("hidden");
+  
+  const captionInput = document.querySelector("#post_caption");
+  const caption = captionInput ? captionInput.value.trim() : "";
+  
+  preview_wrapper.classList.add("hidden");
   const formData = new FormData();
   formData.append("image", selectedFile);
+  formData.append("caption", caption);
   const token = localStorage.getItem("token");
-console.log(formData)
+  
    try {
- const response = await fetch("https://socialmedia-platform-server.onrender.com/api/auth/upload-post",{
+ const response = await fetch(`${url}/api/auth/upload-post`,{
   method: "POST",
   headers: {
     Authorization: `Bearer ${token}`, 
@@ -204,14 +217,17 @@ console.log(formData)
 }
 );
 const data = await response.json();
-console.log(data);
         if (!data.success) 
       alert("Upload failed!");
       else {
+        if (captionInput) captionInput.value = "";
         await loadPosts();
       }
+loading.classList.add("hidden");
+
       } catch (error) {
         console.log(error.message);
+        loading.classList.remove("hidden");
         alert("Error uploading image.");
       } 
 })
@@ -223,47 +239,72 @@ window.location="profilePage.html";
 });
 
 friendsPage.addEventListener("click",async()=>{
+const isHidden = friendsContainer.classList.contains("hidden");
+const currentTitle = friendSectionTitle.textContent;
 
+if(!isHidden && currentTitle === "Friend Requests"){
+  friendsContainer.classList.add("hidden");
+  return;
+}
 
 try{
-
-  const response=await axios.post(`https://socialmedia-platform-server.onrender.com/api/friends/requests/${userId}`);
-friendSection.innerHTML="";
-
-friendSection.classList.toggle("hidden");
-response.data.forEach(user=>{
-
-console.log(user.status)
- friendSection.innerHTML +=
- `  
-
-   <div class="friendsDetails">
- 
-<div class="friendInfo">
-    <img src="../../public/avatar.jpeg" alt="" class="friendProfilePic"> 
-    <span class="friendName">${user.sender.fullName}</span>
-</div>  
-
-<div class="myResponse">
-    <button class="requestAccept" onclick="acceptRequest('${user._id}')"><i class="fa-solid fa-check"></i></button>
-    <button class="requestReject" onclick="rejectRequest('${user._id}')"><i class="fa-solid fa-xmark"></i></button>
-</div>
-
-    </div>
-`
-
-
-
-})
-
-
+  const response=await axios.post(`${url}/api/friends/requests/${userId}`);
+  
+  friendSection.innerHTML="";
+  friendSectionTitle.textContent = "Friend Requests";
+  friendsContainer.classList.remove("hidden");
+  
+  if(response.data.length === 0){
+    friendSection.innerHTML = `<div class="emptyState">No pending friend requests</div>`;
+    return;
+  }
+  
+  response.data.forEach(user=>{
+    const friendRequestDiv = document.createElement("div");
+    friendRequestDiv.className = "friendsDetails";
+    
+    const friendInfoDiv = document.createElement("div");
+    friendInfoDiv.className = "friendInfo";
+    
+    const profileImg = document.createElement("img");
+    profileImg.src = user.sender.profilePic || "../../public/avatar.jpeg";
+    profileImg.className = "friendProfilePic";
+    profileImg.alt = user.sender.fullName;
+    
+    const friendName = document.createElement("span");
+    friendName.className = "friendName";
+    friendName.textContent = user.sender.fullName;
+    
+    friendInfoDiv.appendChild(profileImg);
+    friendInfoDiv.appendChild(friendName);
+    
+    const myResponseDiv = document.createElement("div");
+    myResponseDiv.className = "myResponse";
+    
+    const acceptBtn = document.createElement("button");
+    acceptBtn.className = "requestAccept";
+    acceptBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+    acceptBtn.onclick = () => acceptRequest(user._id);
+    
+    const rejectBtn = document.createElement("button");
+    rejectBtn.className = "requestReject";
+    rejectBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+    rejectBtn.onclick = () => rejectRequest(user._id);
+    
+    myResponseDiv.appendChild(acceptBtn);
+    myResponseDiv.appendChild(rejectBtn);
+    
+    friendRequestDiv.appendChild(friendInfoDiv);
+    friendRequestDiv.appendChild(myResponseDiv);
+    
+    friendSection.appendChild(friendRequestDiv);
+  });
 }
 catch(error){
-console.log(error.message)
+  console.log(error.message);
+  friendSection.innerHTML = `<div class="emptyState">Error loading friend requests</div>`;
 }
-
 });
-
 
 searchBar.addEventListener("input",async ()=>{
     
@@ -278,7 +319,7 @@ searchBar.addEventListener("input",async ()=>{
     else {
           list.style.display="inline";
     }
-    const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/friends/search",{name});
+    const response=await axios.post(`${url}/api/friends/search`,{name});
     const users=response.data;
     if(users.length===0){
     list.style.display="none";
@@ -308,7 +349,7 @@ const sendFriendRequest= async(receiverId)=> {
 const senderId=userId;
 
 try{
-    const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/friends/sendRequest",
+    const response=await axios.post(`${url}/api/friends/sendRequest`,
         {
             senderId,
             receiverId
@@ -323,29 +364,30 @@ console.log(error?.response.data.message);
 }
 
 const acceptRequest=async(requestId)=>{
-
 try{
-  const response=await fetch(`https://socialmedia-platform-server.onrender.com/api/friends/accept`,{
+  const response=await fetch(`${url}/api/friends/accept`,{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({requestId})
   });
 
 const data=await response.json();
-console.log(data);
 alert(data.message);
 
-appendFriends();
+const friendRequestBtn = document.querySelector("#friends");
+if(friendRequestBtn){
+  friendRequestBtn.click();
+}
 }
 catch(error){
   console.log(error.message);
+  alert("Error accepting friend request");
 }
-
 }
 
 const rejectRequest=async(requestId)=>{
 try{
-const response=await fetch(`https://socialmedia-platform-server.onrender.com/api/friends/reject`,
+const response=await fetch(`${url}/api/friends/reject`,
 {
     method:"POST",
     headers:{"Content-Type":"application/json"},
@@ -353,73 +395,102 @@ const response=await fetch(`https://socialmedia-platform-server.onrender.com/api
   }
 )
 const data=await response.json();
-console.log(data.message);
-appendFriends();
+const friendRequestBtn = document.querySelector("#friends");
+if(friendRequestBtn){
+  friendRequestBtn.click();
+}
 }
 catch(error){
   console.log(error.message);
+  alert("Error rejecting friend request");
 }
-
-
 }
 
 const appendFriends=async()=>{
-friendSection.classList.toggle("hidden");
+  const isHidden = friendsContainer.classList.contains("hidden");
+  const currentTitle = friendSectionTitle.textContent;
+
+  if(!isHidden && currentTitle === "Friends"){
+    friendsContainer.classList.add("hidden");
+    return;
+  }
+
+  friendsContainer.classList.remove("hidden");
+  friendSectionTitle.textContent = "Friends";
   try{
-const response=await fetch(`https://socialmedia-platform-server.onrender.com/api/friends/list/${userId}`,{
-  method:"POST"}
-);
-const friends=await response.json();
+    const response=await fetch(`${url}/api/friends/list/${userId}`,{
+      method:"POST"
+    });
+    const friends=await response.json();
 
-friendSection.innerHTML="";
+    friendSection.innerHTML="";
 
-console.log(friends)
-friends.forEach(friend=>{
-  let userDetails;
-const id=friend.sender._id;
-if(id==userId){
-userDetails=friend.receiver;
-}
-else {
-  userDetails=friend.sender;
-}
+    if(friends.length === 0){
+      friendSection.innerHTML = `<div class="emptyState">No friends yet</div>`;
+      return;
+    }
 
-  console.log(friend)
-  friendSection.innerHTML +=
-`   
+    friends.forEach(friend=>{
+      let userDetails;
+      const id=friend.sender._id;
+      if(id==userId){
+        userDetails=friend.receiver;
+      }
+      else {
+        userDetails=friend.sender;
+      }
 
-<div class="friendsDetails">
-<div class="friendInfo">
-    <img src="${userDetails.profilePic}" alt="" class="friendProfilePic"> 
-    <span class="friendName">${userDetails.fullName}</span>
-</div>  
- <button class="requestReject" onclick="deleteFriends('${userDetails._id}')"><i class="fa-solid fa-xmark"></i></button>
-</div>
-
-    </div>
-`
-
-})
-
-
-
+      const friendDiv = document.createElement("div");
+      friendDiv.className = "friendsDetails";
+      
+      const friendInfoDiv = document.createElement("div");
+      friendInfoDiv.className = "friendInfo";
+      
+      const profileImg = document.createElement("img");
+      profileImg.src = userDetails.profilePic || "../../public/avatar.jpeg";
+      profileImg.className = "friendProfilePic";
+      profileImg.alt = userDetails.fullName;
+      
+      const friendName = document.createElement("span");
+      friendName.className = "friendName";
+      friendName.textContent = userDetails.fullName;
+      
+      friendInfoDiv.appendChild(profileImg);
+      friendInfoDiv.appendChild(friendName);
+      
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "requestReject";
+      deleteBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      deleteBtn.onclick = () => deleteFriends(userDetails._id);
+      
+      friendDiv.appendChild(friendInfoDiv);
+      friendDiv.appendChild(deleteBtn);
+      
+      friendSection.appendChild(friendDiv);
+    });
   }
   catch(error){
     console.log(error.message);
+    friendSection.innerHTML = `<div class="emptyState">Error loading friends</div>`;
   }
-
 }
 
 friendsAppend.addEventListener("click",()=>{
 
   appendFriends();
 })
-
 const likePost=async (postId)=>{
   const likeBtn=document.getElementById(`likeBtn-${postId}`);
+  let alreadyLiked=likeBtn.classList.contains("liked");
+  const likeCount=document.getElementById(`likeCount-${postId}`);
+  let count = parseInt(likeCount.innerText);
+likeCount.innerText=alreadyLiked?`${count-1} likes`:`${count+1} likes`;
+likeBtn.classList.toggle("liked");
+
+
 let liked=false;
   try{
-const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/auth/likePost",{
+const response=await axios.post(`${url}/api/auth/likePost`,{
   postId,
   userId
 });
@@ -433,19 +504,18 @@ const response=await axios.post("https://socialmedia-platform-server.onrender.co
 }
 
 const deleteFriends=async (friendsId)=>{
-
   try{
-    const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/friends/deleteFriend",{userId,friendsId});
-    console.log(response);
+    const response=await axios.post(`${url}/api/friends/deleteFriend`,{userId,friendsId});
     appendFriends();
   }
 catch(error){
-  console.log(error.message)
+  console.log(error.message);
+  alert("Error removing friend");
 }
 }
 const findUser=async(userId)=>{
   try{
-const response=await axios.post("https://socialmedia-platform-server.onrender.com/api/auth/findUser",{userId});
+const response=await axios.post(`${url}/api/auth/findUser`,{userId});
 return response.data;
 
 }
@@ -453,10 +523,5 @@ catch(error){
   console.log("Error in find user :",error.message);
 }
 }
-
-cancelPOst.addEventListener("click",()=>{
-
-})
-
 
 

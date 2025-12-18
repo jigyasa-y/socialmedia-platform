@@ -270,7 +270,7 @@ align-items:center;
  .post{
   
    border-top: 3px solid rgb(26, 25, 25);
-       background-color:rgb(27, 23, 23);
+       /* background-color:rgb(27, 23, 23); */
        /* margin:5px; */
        border-radius:10px;
        box-shadow:0 5px 5px rgb(12, 12, 12);
@@ -384,13 +384,13 @@ align-items:center;
     cursor:pointer;
 }
 
-#likes{
+.likes{
     padding-left: 1.5rem;
     width:15rem;
     height: 100%;
     background-color:rgb(27, 23, 23);
 }
-#likes:hover{
+.likes:hover{
     background-color: var(--secondaryColor);
     cursor:pointer;
 }
@@ -503,35 +503,64 @@ outline: none;
     background-color:rgb(27, 23, 23);
     position: absolute;
     top:50%;
-    transform: translate(0%,-50%);
-    height:30rem;
+    left:50%;
+    transform: translate(-50%,-50%);
+    height:35rem;
     margin-top:2.40rem;
-    width:19rem;
+    width:25rem;
     display: flex;
     flex-direction: column;
-    padding:10px;
-    border-radius:5px;
+    padding:20px;
+    border-radius:10px;
     text-align: center;
-    overflow: auto;
-    box-shadow:0 0 10px rgb(0, 0, 0);
-
-   
+    overflow: hidden;
+    box-shadow:0 0 20px rgba(0, 0, 0, 0.8);
+    z-index: 1000;
 }
 .friends h1{
     margin-bottom:1.5rem;
     border-bottom: 2px solid var(--borderColor);
     color:grey;
-    
+    padding-bottom: 10px;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+.friendsList {
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px;
+}
+.friendsList::-webkit-scrollbar{
+    width: 6px;
+}
+.friendsList::-webkit-scrollbar-track{
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+.friendsList::-webkit-scrollbar-thumb{
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+}
+.emptyState{
+    color: rgb(150, 150, 150);
+    padding: 2rem;
+    text-align: center;
+    font-size: 1.1rem;
 }
 .friendsDetails,.searchList{
     background-color:var(--secondaryColor);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding:10px;
-    margin-bottom:2rem;
-    border-radius:3px;
-    box-shadow:0 0 20px rgb(15, 14, 14);
+    padding:12px;
+    margin-bottom:12px;
+    border-radius:8px;
+    box-shadow:0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.friendsDetails:hover{
+    transform: translateY(-2px);
+    box-shadow:0 4px 12px rgba(0, 0, 0, 0.4);
 }
 .friendInfo {
     display: flex;
@@ -564,8 +593,21 @@ outline: none;
     border:none;
     font-size:13px;
     font-weight: bolder;
-     cursor: pointer;
-     box-shadow:0 5px 10px rgb(19, 18, 18);
+    cursor: pointer;
+    box-shadow:0 2px 6px rgba(19, 18, 18, 0.5);
+    border-radius: 50%;
+    transition: transform 0.2s, background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.requestAccept:hover{
+    background-color: rgb(25, 135, 25);
+    transform: scale(1.1);
+}
+.requestReject:hover{
+    background-color: rgb(175, 35, 35);
+    transform: scale(1.1);
 }
 
 .hidden{
@@ -644,12 +686,26 @@ outline: none;
     border-radius: 5px;
 }
 #post_caption{
-    height: 4rem;
-
-    background: none;
-    padding-left:10px ;
+    width: 100%;
+    min-height: 4rem;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
     outline: none;
     border: 1px solid rgb(48, 45, 45);
+    border-radius: 5px;
+    color: white;
+    font-family: "Karla", sans-serif;
+    font-size: 14px;
+    resize: vertical;
+    margin: 10px 0;
+}
+
+#post_caption::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+#post_caption:focus {
+    border-color: var(--primary-color);
 }
 .previewDiv img{
     /* height: 18rem; */
@@ -657,15 +713,16 @@ outline: none;
     width: 100%;
         background-size: cover;
     background-position: center;
-    object-fit: cover;
+    object-fit: contain;
     border: none;
     outline: none;
     border-radius: 10px;
     
 }
 .preview_wrapper{
+
     position: absolute;
-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
     height: 100%;
     width: 100%;
     left: 50%;
@@ -676,39 +733,35 @@ backdrop-filter: blur(5px);
     align-items:center;
     z-index: 99;
      
-
 }
 .previewDiv{
+
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%,-50%);
     height: 40rem;
-
     background-color:rgb(56, 35, 35);
     width:70rem;
-  
     display: flex;
-    /* justify-content: center; */
     flex-direction: column;
-    /* align-items: center; */
     padding: 10px;
     border-radius: 10px;;
     background-size: cover;
     background-position: center;
     object-fit: contain;
-
    border: none;
    outline: none; 
 
 }
 
 .liked{
+
     color:rgb(62, 62, 167);
     font-weight: bolder;
     box-shadow: 0 0 5px rgb(131, 101, 201);
+    transition: 0.1s;
 
-    transition: 0.65s;
 }
 .wrapper_div{
      display: flex;
@@ -770,11 +823,45 @@ display: inline-block;
 border-radius: 50%;
 border-top-color:rgb(79, 79, 178);
 transition: 0.2s;
-animation: spin 0.3s linear infinite;
+animation: spin 0.5s linear infinite;
 
 
  }
 
+ .loading_wrapper{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+  backdrop-filter: blur(4px) brightness(0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    gap: 1rem;
+}
+#spinner{
+    height: 2.5rem;
+    width: 2.5rem;
+    border:3px solid white;
+    border-bottom-color:rgb(96, 96, 216) ;
+}
+.loading_wrapper h1{
+    color: rgb(125, 123, 123);
+    animation: an 2s linear infinite;
+}
+
+@keyframes an{
+    0%{
+        opacity: 0;
+    }
+    50%{
+        opacity:1;
+    }
+    100%{
+        opacity: 0;
+    }
+}
  @keyframes spin{
     0%{
         rotate: 0deg;
